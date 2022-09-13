@@ -33,7 +33,7 @@ func main() {
 			os.Exit(1)
 		}
 		fmt.Println("Got connection from: ", conn.RemoteAddr())
-		go handleSmokeTest(conn)
+		go handlePrimeTime(conn)
 	}
 }
 
@@ -113,27 +113,4 @@ func handlePrimeTime(conn net.Conn) {
 fail:
 	conn.Write([]byte("{}\n"))
 	return
-}
-
-func handleSmokeTest(conn net.Conn) {
-	// close conn later
-	defer conn.Close()
-	// io.Copy(conn, conn)
-	//read
-	buf := make([]byte, 1024)
-	for {
-		n, err := conn.Read(buf)
-		if err != nil {
-			if err != io.EOF {
-				fmt.Println("read error: ", err)
-			}
-			fmt.Printf("Writing last n bytes: %d\n", n)
-			conn.Write(buf[:n])
-			break
-		}
-		fmt.Printf("Writing bytes: %d\n", n)
-		conn.Write(buf[:n])
-	}
-	fmt.Println("Connection closed")
-
 }
